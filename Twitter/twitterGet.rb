@@ -1,7 +1,7 @@
 require 'twitter'
 
 data = Hash.new
-File.readlines("/Users/admin/Desktop/SCG/graalvm-0.32/Contents/Home/examples/rnode/twitterToken.txt").each do |line|
+File.readlines(File.join(File.expand_path(File.dirname(__FILE__)), 'twitterToken.txt')).each do |line|
   var,val = line.chomp.split("=")
   data[var] = val
 end
