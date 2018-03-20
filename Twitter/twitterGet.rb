@@ -13,5 +13,7 @@ client = Twitter::REST::Client.new do |config|
   config.access_token_secret = data['access_token_secret']
 end
 
+twitterData = Array.new
 tweets = client.user_timeline('scgbern', count: 20)
-tweets.each { |tweet| puts tweet.full_text }
+tweets.each { |tweet| twitterData.push(tweet.full_text)}
+twitterData

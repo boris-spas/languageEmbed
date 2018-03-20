@@ -11,27 +11,22 @@ plotCars = Interop.import('plotcars');
 plotWeight = Interop.import('plotheightweight');
 predictWeight = Interop.import('predictweight');
 
+// Java
+let Example = Java.type('Example');
+
 // Expressjs application:
 const express = require('express');
 const app = express();
 
 
 // passing R function as argument to Java which returns the result of R execution...:)
-app.get('/java/:name' ,(req, res) => {
-    let s = req.params.name;
-    console.log(req.params.name);
-    var Example = Java.type('Example');
-    res.send(Example.greet(plotWeight));
+app.get('/java/:arg' ,(req, res) => {
+    let s = req.params.arg;
+    res.send(Example.tweetsFromRuby(s));
 });
 
-app.get('/cars', function (req, res) {
-    console.log('generating cars graph');
-    res.send(plotCars(req.query.xaxis, req.query.yaxis, req.query.zaxis));
-});
-
-app.get('/lm', function (req, res) {
-    console.log('generating height/weight plot');
-    res.send(plotWeight());
+app.get('/java/' ,(req, res) => {
+    res.send(Example.tweetsFromRuby('arg'));
 });
 
 app.get('/lm/predict', function (req, res) {
