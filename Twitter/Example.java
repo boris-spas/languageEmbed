@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2012 - 2018 Oracle and/or its affiliates. All rights reserved.
- */
 import org.graalvm.polyglot.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +5,13 @@ import java.io.File;
 public class Example {
 
     public static void main(String[] args) throws Exception{
-        tweetsFromRuby(null);
+        //tweetsFromRuby(null);
+
+        rubyFunction();
+
+    }
+
+    public static void initialize(){
 
     }
 
@@ -37,22 +40,29 @@ public class Example {
 
         ArrayList<String[]> rData = new ArrayList<String[]>();
         rData.add(tD);
-        Value randomTweet = rSortScript.execute(rData); 
+        Value randomTweet = rSortScript.execute((Object)rbTwitter); 
         //List sortedTweets = rSortScript.execute(rData).as(List.class); 
         
-        return randomTweet.asString();
+        System.out.println(randomTweet.asString());
+
+        return null;
     }
 
     public static void rubyFunction() throws Exception {
-        /*
+        
         Context context = Context.create();
         
         File file = new File(Example.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "rubyFunction.rb");
 
         Source rbSource = Source.newBuilder(Source.findLanguage(file), file).build();
         
-        System.out.println(Source.findLanguage(file));
-        Value rbFunction = context.eval("ruby","5+5");
-        */
+        
+        Value rbFunction = context.eval(rbSource);
+        if(rbFunction.canExecute()){
+            System.out.println("Source.findLanguage(file)");
+        }else{
+            System.out.println(rbFunction.execute());
+        }
+        
     }
 }
