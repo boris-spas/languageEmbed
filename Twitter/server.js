@@ -12,7 +12,8 @@ plotWeight = Interop.import('plotheightweight');
 predictWeight = Interop.import('predictweight');
 
 // Java
-let Example = Java.type('Example');
+let Example = Java.type('Host');
+Example.initialize();
 
 // Expressjs application:
 const express = require('express');
@@ -25,13 +26,30 @@ app.get('/java/:arg' ,(req, res) => {
     res.send(Example.tweetsFromRuby(s));
 });
 
-app.get('/java/' ,(req, res) => {
+app.get('/java' ,(req, res) => {
     res.send(Example.tweetsFromRuby('arg'));
 });
 
+app.get('/rtest' ,(req, res) => {
+    res.send(Example.rTest());
+});
+
 app.get('/lm/predict', function (req, res) {
-    console.log('predicting weight');
     res.send('' + predictWeight(parseInt(req.query.height, 10)));
+});
+
+app.get('/lm', function (req, res) {
+    console.log('generating height/weight plot');
+    res.send(plotWeight());
+});
+
+app.get('/update', (req, res) => {
+    console.log('start update');
+    Example = Java.type('Host');
+    console.log('first step done');
+    Example.initialize();
+    console.log('second step done');
+    res.send('done');
 });
 
 
