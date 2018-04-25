@@ -30,11 +30,10 @@ public class JavaHost{
         }
     }
 
-    public String rTest(String twitterAccount, int tweetCount) throws Exception{
+    public String tweetSentiment(String searchTerm, int tweetCount) throws Exception{
         try{
-            Value tweets = rbTwitterGet.execute(twitterAccount, tweetCount);
+            Value tweets = rbTwitterGet.execute(searchTerm, tweetCount);
             String tweetMessages = (tweets.hasArrayElements()) ? buildTweetString(tweets) : "";
-
             return  tweetMessages + rSentAna.execute(tweets).asString();
         } catch (Exception e) {
             return e.getMessage();

@@ -1,7 +1,8 @@
 require 'twitter'
 
-def getTweets(name, number)
-  begin   data = Hash.new
+def getTweets(searchTerm, tweetCount)
+  begin   
+    data = Hash.new
     File.readlines(File.join(File.expand_path(File.dirname(__FILE__)), 'twitterToken.txt')).each do |line|
       var,val = line.chomp.split("=")
       data[var] = val
@@ -15,7 +16,13 @@ def getTweets(name, number)
     end
 
     twitterData = Array.new
-    tweets = client.user_timeline(name, count: number)
+
+    if searchTerm[0] == '@'
+      tweets = client.user_timeline(searchTerm, count: tweetCount)
+    else 
+      tweets = client.search(searchTerm, lang: "en").take(tweetCount)
+    end
+
     tweets.each { |tweet| twitterData.push(tweet.full_text)}
     twitterData
 

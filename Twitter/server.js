@@ -30,9 +30,9 @@ app.post('/sentiment', urlencodedParser ,(req, res) => {
     console.time('rAnalysis');
 
     if(req.body.name && req.body.number && /^\d+$/.test(req.body.number)){
-        let name = req.body.name;
-        let number = parseInt(req.body.number);
-        res.send(form + JavaHost.rTest(name, number));
+        let searchTerm = req.body.name;
+        let tweetCount = parseInt(req.body.number);
+        res.send(form + JavaHost.tweetSentiment(searchTerm, tweetCount));
     }
     else {
         res.send(form + "false input");

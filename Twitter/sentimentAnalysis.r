@@ -14,8 +14,8 @@ for(i in 1:length(rbTweets)){
 }
 
 # todo: add relative path
-neg = scan("negativeWords.txt", what="character", comment.char=";")
-pos = scan("positiveWords.txt", what="character", comment.char=";")
+neg = scan("negativeWords.txt", what="character", quiet = TRUE)
+pos = scan("positiveWords.txt", what="character", quiet = TRUE)
 
 
 for(i in 1:length(tweets)){
