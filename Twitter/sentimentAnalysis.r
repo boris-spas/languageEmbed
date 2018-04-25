@@ -12,7 +12,6 @@ for(i in 1:length(rbTweets)){
     tweets <- c(tweets, x)
 }
 
-# todo: add relative path
 neg = scan("negativeWords.txt", what="character", quiet = TRUE)
 pos = scan("positiveWords.txt", what="character", quiet = TRUE)
 
