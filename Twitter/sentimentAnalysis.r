@@ -1,7 +1,6 @@
 library(stringr)
 library(plyr)
 library(lattice)
-library(svglite)
 
 sentimentAnalysis <- function(rbTweets){
 
@@ -48,5 +47,4 @@ for(i in 1:length(tweets)){
 svg(width=4, height=3)
 print(histogram(scores));
 grDevices:::svg.off()
-#xmlSVG(histogram(scores), standalone = FALSE, height = 7, width = 7)
 }
