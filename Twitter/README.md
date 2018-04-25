@@ -1,5 +1,6 @@
 # Twitter 
 (description following)
+Will be updated soon.
 
 ## Setup:
 change to Twitter directory:
@@ -12,6 +13,6 @@ compile java: path/to/graalvm-0.32/Contents/Home/bin/javac *.java
 
 run the server: /Users/admin/Desktop/SCG/graalvm-0.32/Contents/Home/bin/node --jvm --polyglot server.js
 
-open browser at http://localhost:12837/java
+open browser at http://localhost:3000/sentiment
 
 
