@@ -30,15 +30,24 @@ app.post('/sentiment', urlencodedParser ,(req, res) => {
     console.time('rAnalysis');
 
     if(req.body.name && req.body.number && /^\d+$/.test(req.body.number)){
-        let searchTerm = req.body.name;
-        let tweetCount = parseInt(req.body.number);
-        res.send(form + JavaHost.tweetSentiment(searchTerm, tweetCount));
+        var searchTerm = req.body.name;
+        var tweetCount = parseInt(req.body.number);
+        var rPlot = JavaHost.tweetSentiment(searchTerm, tweetCount);
+        res.send(form + rPlot);
     }
     else {
         res.send(form + "false input");
     }
 
     console.timeEnd('rAnalysis');
+});
+
+app.get('/sentimentjson', () => {
+
+    var json = {"searchTerm":"@scgbern", "tweetCount":100};
+    var rPlot = JavaHost.tweetSentiment(json);
+    res.send(rPlot);
+
 });
 
 

@@ -1,16 +1,10 @@
 library(stringr)
-library(plyr)
+#library(plyr)
 library(lattice)
 
-sentimentAnalysis <- function(rbTweets){
+sentimentAnalysis <- function(tweets){
 
-tweets <- c()
 scores <- c()
-
-for(i in 1:length(rbTweets)){
-    x <- toString(rbTweets[i])
-    tweets <- c(tweets, x)
-}
 
 neg = scan("negativeWords.txt", what="character", quiet = TRUE)
 pos = scan("positiveWords.txt", what="character", quiet = TRUE)

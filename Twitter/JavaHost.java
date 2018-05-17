@@ -10,8 +10,29 @@ public class JavaHost{
     private File srcFile;
     private Source source;
 
+    public static void main(String[] args) throws Exception{
+      
+        Context context = Context.newBuilder("R", "ruby").allowAllAccess(true).build();
+        
+        File srcFile = new File("twitterGet.rb");
+        Source source = Source.newBuilder(Source.findLanguage(srcFile), srcFile).build();
+        Value rbTwitterGet = context.eval(source);
+        if(!rbTwitterGet.canExecute()){
+            System.out.println("problems executing rsentAna");
+        }
+
+        System.out.println(rbTwitterGet.execute("@realDonaldTrump", 500).getArrayElement(1).asString());
+        srcFile = new File("sentimentAnalysis.r");
+        System.out.println(Source.findLanguage(srcFile));
+        Source rsource = Source.newBuilder(Source.findLanguage(srcFile), srcFile).build();
+        Value rSentAna = context.eval(rsource);
+        if(!rSentAna.canExecute()){
+            System.out.println("problems executing rsentAna");
+        }
+
+    }
     public JavaHost() throws Exception{
-        context = Context.create();
+        context = Context.newBuilder("R", "ruby").allowAllAccess(true).build();
         
         srcFile = new File("twitterGet.rb");
         source = Source.newBuilder(Source.findLanguage(srcFile), srcFile).build();
@@ -28,9 +49,19 @@ public class JavaHost{
         }
     }
 
-    public String tweetSentiment(String searchTerm, int tweetCount) throws Exception{
+    public String tweetSentiment(String searchTerm, int tweetCount){
         try{
             Value tweets = rbTwitterGet.execute(searchTerm, tweetCount);
+            String tweetMessages = (tweets.hasArrayElements()) ? buildTweetString(tweets) : "";
+            return  tweetMessages + rSentAna.execute(tweets).asString();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+    
+    public String tweetSentiment(Value json){
+        try{
+            Value tweets = rbTwitterGet.execute(json.getMember("searchTerm").asString(), json.getMember("tweetCount").asInt());
             String tweetMessages = (tweets.hasArrayElements()) ? buildTweetString(tweets) : "";
             return  tweetMessages + rSentAna.execute(tweets).asString();
         } catch (Exception e) {
