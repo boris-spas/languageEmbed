@@ -32,3 +32,5 @@ def getTweets(searchTerm, tweetCount)
 end
 
 method(:getTweets)
+getTweets('@scgbern', 10)
+
