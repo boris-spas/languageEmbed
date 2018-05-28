@@ -1,5 +1,5 @@
 # Twitter 
-Description will follow
+Description will follow.
 
 ## Setup:
 
@@ -17,10 +17,10 @@ tar -xvzf graalvm.tar.gz
 export PATH=/path/to/graalvm/bin:$PATH
 
 4. Get ruby + R:<br/>
-gu -c install org.graalvm.ruby
+gu -c install org.graalvm.ruby<br/>
 gu -c install org.graalvm.R
 
-5. Install Tools:<br/>
+5. Install needed Tools:<br/>
 apt-get update<br/>
 sudo apt-get install git gcc g++ libcurl4-openssl-dev libssl-dev libgomp1 bzip2 make clang llvm libc++-dev
 
@@ -29,7 +29,7 @@ R --jvm<br/>
 - install.packages("stringr")<br/>
 - install.packages("lattice")
 
-7. install ruby Twitter gem:
+7. install ruby Twitter gem:<br/>
 ruby -Sgem install twitter -v 5.17.0<br/>
 Comment line 2 in: <br/> path/to/graalvm/jre/languages/ruby/lib/ruby/gems/2.3.0/gems/http_parser.rb-0.6.0/lib/http_parser.rb<br/>
 \#require 'ruby_http_parser'<br/>
@@ -44,8 +44,8 @@ npm install
 10. compile Java<br/>
 javac *.java
 
-11. Get Twitter Token:<br/>
-Save your twitter Token with the following structure in the languageEmbed/Twitter directory as .txt file:<br/>
+11. Twitter Token:<br/>
+Save the twitter Token with the following structure in the languageEmbed/Twitter directory as twitterToken.txt:<br/>
 consumer_key=<br/>
 consumer_secret=<br/>
 access_token=<br/>
