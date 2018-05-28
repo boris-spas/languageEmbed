@@ -1,10 +1,10 @@
 console.time('serverStart');
 
-const JavaHostType = Java.type('JavaHost');
+const TweetSentimentType = Java.type('TweetSentimentAnalysis');
 try{
-    var JavaHost = new JavaHostType();
+    var TweetSentimentAnalysis = new TweetSentimentType();
 } catch (err) {
-    console.error("Problem with JavaHost");
+    console.error("Problem with TweetSentimentAnalysis " + err);
     process.exit(1);
 }
 
@@ -32,7 +32,7 @@ app.post('/sentiment', urlencodedParser ,(req, res) => {
     if(req.body.name && req.body.number && /^\d+$/.test(req.body.number)){
         var searchTerm = req.body.name;
         var tweetCount = parseInt(req.body.number);
-        var rPlot = JavaHost.tweetSentiment(searchTerm, tweetCount);
+        var rPlot = TweetSentimentAnalysis.tweetSentiment(searchTerm, tweetCount);
         res.send(form + rPlot);
     }
     else {
@@ -42,10 +42,10 @@ app.post('/sentiment', urlencodedParser ,(req, res) => {
     console.timeEnd('rAnalysis');
 });
 
-app.get('/sentimentjson', () => {
+app.get('/sentimentjson', (req, res) => {
 
     var json = {"searchTerm":"@scgbern", "tweetCount":100};
-    var rPlot = JavaHost.tweetSentiment(json);
+    var rPlot = TweetSentimentAnalysis.tweetSentiment(json);
     res.send(rPlot);
 
 });

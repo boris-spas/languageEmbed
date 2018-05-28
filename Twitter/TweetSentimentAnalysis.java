@@ -1,37 +1,16 @@
 import org.graalvm.polyglot.*;
 import java.io.File;
 
-public class JavaHost{
-
+public class TweetSentimentAnalysis{
     private Context context;
 
     final Value rbTwitterGet;
     final Value rSentAna;
-    private File srcFile;
-    private Source source;
+    
+    public TweetSentimentAnalysis() throws Exception{
+        File srcFile;
+        Source source;
 
-    public static void main(String[] args) throws Exception{
-      
-        Context context = Context.newBuilder("R", "ruby").allowAllAccess(true).build();
-        
-        File srcFile = new File("twitterGet.rb");
-        Source source = Source.newBuilder(Source.findLanguage(srcFile), srcFile).build();
-        Value rbTwitterGet = context.eval(source);
-        if(!rbTwitterGet.canExecute()){
-            System.out.println("problems executing rsentAna");
-        }
-
-        System.out.println(rbTwitterGet.execute("@realDonaldTrump", 500).getArrayElement(1).asString());
-        srcFile = new File("sentimentAnalysis.r");
-        System.out.println(Source.findLanguage(srcFile));
-        Source rsource = Source.newBuilder(Source.findLanguage(srcFile), srcFile).build();
-        Value rSentAna = context.eval(rsource);
-        if(!rSentAna.canExecute()){
-            System.out.println("problems executing rsentAna");
-        }
-
-    }
-    public JavaHost() throws Exception{
         context = Context.newBuilder("R", "ruby").allowAllAccess(true).build();
         
         srcFile = new File("twitterGet.rb");
@@ -60,13 +39,9 @@ public class JavaHost{
     }
     
     public String tweetSentiment(Value json){
-        try{
-            Value tweets = rbTwitterGet.execute(json.getMember("searchTerm").asString(), json.getMember("tweetCount").asInt());
-            String tweetMessages = (tweets.hasArrayElements()) ? buildTweetString(tweets) : "";
-            return  tweetMessages + rSentAna.execute(tweets).asString();
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        String searchTerm = json.getMember("searchTerm").asString();
+        int tweetCount = json.getMember("tweetCount").asInt();
+        return tweetSentiment(searchTerm, tweetCount);
     }
 
     private String buildTweetString(Value tweets){
