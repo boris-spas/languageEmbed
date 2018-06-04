@@ -1,58 +1,62 @@
 console.time('serverStart');
 
 const TweetSentimentType = Java.type('TweetSentimentAnalysis');
-try{
-    var TweetSentimentAnalysis = new TweetSentimentType();
+try {
+ var TweetSentimentAnalysis = new TweetSentimentType();
 } catch (err) {
-    console.error("Problem with TweetSentimentAnalysis " + err);
-    process.exit(1);
+ console.error("Problem with TweetSentimentAnalysis " + err);
+ process.exit(1);
 }
 
 const express = require('express');
 const app = express();
 
 const bodyParser = require('body-parser');
-const urlencodedParser = bodyParser.urlencoded({ extended: true });
+const urlencodedParser = bodyParser.urlencoded({
+ extended: true
+});
 
-var form ='';
-    form += "<form action='/sentiment'  method='post' name='form1'>";
-    form += "Twitter Account Name:<input type= 'text' name='name'></p>";
-    form += "Number of Tweets:<input type='text' name='number'></p>";
-    form += "<input type='submit' value='submit'>";
-    form += "</form>";
+var form = '';
+form += "<form action='/sentiment'  method='post' name='form1'>";
+form += "Twitter Account Name:<input type= 'text' name='name'></p>";
+form += "Number of Tweets:<input type='text' name='number'></p>";
+form += "<input type='submit' value='submit'>";
+form += "</form>";
 
 
 app.get('/sentiment', (req, res) => {
-    res.send(form);
-  });
+ res.send(form);
+});
 
-app.post('/sentiment', urlencodedParser ,(req, res) => {
-    console.time('rAnalysis');
+app.post('/sentiment', urlencodedParser, (req, res) => {
+ console.time('rAnalysis');
 
-    if(req.body.name && req.body.number && /^\d+$/.test(req.body.number)){
-        var searchTerm = req.body.name;
-        var tweetCount = parseInt(req.body.number);
-        var rPlot = TweetSentimentAnalysis.tweetSentiment(searchTerm, tweetCount);
-        res.send(form + rPlot);
-    }
-    else {
-        res.send(form + "false input");
-    }
+ if (req.body.name && req.body.number && /^\d+$/.test(req.body.number)) {
+  var searchTerm = req.body.name;
+  var tweetCount = parseInt(req.body.number);
+  var rPlot = TweetSentimentAnalysis.tweetSentiment(searchTerm, tweetCount);
+  res.send(form + rPlot);
+ } else {
+  res.send(form + "false input");
+ }
 
-    console.timeEnd('rAnalysis');
+ console.timeEnd('rAnalysis');
 });
 
 app.get('/sentimentjson', (req, res) => {
 
-    var json = {"searchTerm":"@scgbern", "tweetCount":100};
-    var rPlot = TweetSentimentAnalysis.tweetSentiment(json);
-    res.send(rPlot);
+ var json = {
+  "searchTerm": "@scgbern",
+  "tweetCount": 100
+ };
+ var rPlot = TweetSentimentAnalysis.tweetSentiment(json);
+ res.send(rPlot);
 
 });
 
 
 var port = 3000;
 var server = app.listen(port, function() {
-    console.log("Server listening on http://localhost:" + port);
-    console.timeEnd('serverStart');
+ console.log("Server listening on http://localhost:" + port);
+ console.timeEnd('serverStart');
 });
