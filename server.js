@@ -18,8 +18,8 @@ const urlencodedParser = bodyParser.urlencoded({
 
 var form = '';
 form += "<form action='/sentiment'  method='post' name='form1'>";
-form += "Twitter Account Name:<input type= 'text' name='name'></p>";
-form += "Number of Tweets:<input type='text' name='number'></p>";
+form += "Twitter Account or Hash Tag: <input type= 'text' name='name'></p>";
+form += "Number of Tweets: <input type='text' name='number'></p>";
 form += "<input type='submit' value='submit'>";
 form += "</form>";
 
@@ -29,18 +29,18 @@ app.get('/sentiment', (req, res) => {
 });
 
 app.post('/sentiment', urlencodedParser, (req, res) => {
- console.time('rAnalysis');
+ console.time('Sentiment Analysis');
 
  if (req.body.name && req.body.number && /^\d+$/.test(req.body.number)) {
   var searchTerm = req.body.name;
   var tweetCount = parseInt(req.body.number);
-  var rPlot = TweetSentimentAnalysis.tweetSentiment(searchTerm, tweetCount);
+  var rPlot = '<div style="width:60%;">' + TweetSentimentAnalysis.tweetSentiment(searchTerm, tweetCount) + '</div>';
   res.send(form + rPlot);
  } else {
   res.send(form + "false input");
  }
 
- console.timeEnd('rAnalysis');
+ console.timeEnd('Sentiment Analysis');
 });
 
 app.get('/sentimentjson', (req, res) => {
