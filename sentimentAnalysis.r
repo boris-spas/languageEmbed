@@ -17,11 +17,11 @@ wordsInString <- function(tweet) {
   return(words)
 }
 
+neg = scan("negativeWords.txt", what = "character", quiet = TRUE)
+pos = scan("positiveWords.txt", what = "character", quiet = TRUE)
+
 sentimentAnalysis <- function(tweets) {
   scores <- c()
-
-  neg = scan("negativeWords.txt", what = "character", quiet = TRUE)
-  pos = scan("positiveWords.txt", what = "character", quiet = TRUE)
 
   for (i in 1:length(tweets)) {
     words <- wordsInString(tweets[i])
