@@ -1,10 +1,10 @@
 console.time('serverStart');
 
-const TweetSentimentType = Java.type('TweetSentimentAnalysis');
+const TweetSentimentType = Java.type('TweetSentimentAnalyzer');
 try {
-    var TweetSentimentAnalysis = new TweetSentimentType();
+    var TweetSentimentAnalyzer = new TweetSentimentType();
 } catch (err) {
-    console.error("Problem with TweetSentimentAnalysis " + err);
+    console.error("Problem with TweetSentimentAnalyzer " + err);
     process.exit(1);
 }
 
@@ -34,7 +34,7 @@ app.post('/sentiment', urlencodedParser, (req, res) => {
     if (req.body.name && req.body.number && /^\d+$/.test(req.body.number)) {
         var searchTerm = req.body.name;
         var tweetCount = parseInt(req.body.number);
-        var rPlot = '<div style="width:60%;">' + TweetSentimentAnalysis.tweetSentiment(searchTerm, tweetCount) + '</div>';
+        var rPlot = '<div style="width:60%;">' + TweetSentimentAnalyzer.plotSentimentOfTweets(searchTerm, tweetCount) + '</div>';
         res.send(form + rPlot);
     } else {
         res.send(form + "false input");
@@ -49,7 +49,7 @@ app.get('/sentimentjson', (req, res) => {
         "searchTerm": "@scgbern",
         "tweetCount": 100
     };
-    var rPlot = TweetSentimentAnalysis.tweetSentiment(json);
+    var rPlot = TweetSentimentAnalyzer.tweetSentiment(json);
     res.send(rPlot);
 
 });

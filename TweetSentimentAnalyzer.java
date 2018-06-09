@@ -1,61 +1,49 @@
-import org.graalvm.polyglot.*;
 import java.io.File;
+import java.io.IOException;
 
-public class TweetSentimentAnalyzer {
- private Context context;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
 
- final Value rbTwitterGet;
- final Value rSentAna;
+public final class TweetSentimentAnalyzer {
 
- public TweetSentimentAnalysis() throws Exception {
-  File srcFile;
-  Source source;
+	private final Context context;
+	final Value rbGetTweets;
+	final Value rSentimentAnalysis;
 
-  context = Context.newBuilder("R", "ruby").allowAllAccess(true).build();
+	public TweetSentimentAnalyzer() throws Exception {
+		context = Context.newBuilder("R", "ruby").allowAllAccess(true).build();
 
-  srcFile = new File("twitterGet.rb");
-  source = Source.newBuilder(Source.findLanguage(srcFile), srcFile).build();
-  rbTwitterGet = context.eval(source);
-  if (!rbTwitterGet.canExecute()) {
-   throw new EvalException("twitterGet.rb");
-  }
+		rbGetTweets = executeGuestLanguageFile("twitterGet.rb");
+		if (!rbGetTweets.canExecute()) {
+			throw new RuntimeException("sentimentAnalayis.r did not return an executable.");
+		}
 
-  srcFile = new File("sentimentAnalysis.r");
-  source = Source.newBuilder(Source.findLanguage(srcFile), srcFile).build();
-  rSentAna = context.eval(source);
-  if (!rSentAna.canExecute()) {
-   throw new EvalException("sentimentAnalayis.r");
-  }
- }
+		rSentimentAnalysis = executeGuestLanguageFile("sentimentAnalysis.r");
+		if (!rSentimentAnalysis.canExecute()) {
+			throw new RuntimeException("sentimentAnalayis.r did not return an executable.");
+		}
+	}
 
- public String tweetSentiment(String searchTerm, int tweetCount) {
-  try {
-   Value tweets = rbTwitterGet.execute(searchTerm, tweetCount);
-   String tweetMessages = (tweets.hasArrayElements()) ? buildTweetString(tweets) : "";
-   return tweetMessages + rSentAna.execute(tweets).asString();
-  } catch (Exception e) {
-   return e.getMessage();
-  }
- }
+	private Value executeGuestLanguageFile(String path) throws IOException {
+		File srcFile = new File(path);
+		Source source = Source.newBuilder(Source.findLanguage(srcFile), srcFile).build();
+		return context.eval(source);
+	}
 
- public String tweetSentiment(Value json) {
-  String searchTerm = json.getMember("searchTerm").asString();
-  int tweetCount = json.getMember("tweetCount").asInt();
-  return tweetSentiment(searchTerm, tweetCount);
- }
+	public Value plotSentimentOfTweets(String searchTerm, int tweetCount) {
+		try {
+			Value tweets = rbGetTweets.execute(searchTerm, tweetCount);
+			return rSentimentAnalysis.execute(tweets);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
- private String buildTweetString(Value tweets) {
-  String tweetMessages = "";
-  for (int i = 0; i < tweets.getArraySize() && i < 10; i++) {
-   tweetMessages += tweets.getArrayElement(i).asString();
-   tweetMessages += "<br>";
-  }
-  return tweetMessages;
- }
-
- private class EvalException extends Exception {
-  public EvalException(String message) {
-   super(message);
-  }
- }
+	public Value plotSentimentOfTweets(Value json) {
+		String searchTerm = json.getMember("searchTerm").asString();
+		int tweetCount = json.getMember("tweetCount").asInt();
+		return plotSentimentOfTweets(searchTerm, tweetCount);
+	}
 }
