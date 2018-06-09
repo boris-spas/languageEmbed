@@ -1,7 +1,7 @@
 import org.graalvm.polyglot.*;
 import java.io.File;
 
-public class TweetSentimentAnalysis {
+public class TweetSentimentAnalyzer {
  private Context context;
 
  final Value rbTwitterGet;
