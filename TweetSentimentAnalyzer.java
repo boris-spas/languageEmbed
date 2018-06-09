@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.lang.IllegalArgumentException;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
@@ -42,6 +43,9 @@ public final class TweetSentimentAnalyzer {
 	}
 
 	public Value plotSentimentOfTweets(Value json) {
+		if (!json.hasMember("searchTerm") || !json.hasMember("tweetCount")) {
+			throw new IllegalArgumentException("Json not good.");
+		}
 		String searchTerm = json.getMember("searchTerm").asString();
 		int tweetCount = json.getMember("tweetCount").asInt();
 		return plotSentimentOfTweets(searchTerm, tweetCount);
