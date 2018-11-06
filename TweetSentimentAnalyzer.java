@@ -10,18 +10,12 @@ public final class TweetSentimentAnalyzer {
 
 	private final Context context;
 	final Value rbGetTweets;
-	final Value rSentimentAnalysis;
 
 	public TweetSentimentAnalyzer() throws Exception {
 		context = Context.newBuilder("R", "ruby").allowAllAccess(true).build();
 
 		rbGetTweets = executeGuestLanguageFile("twitterGet.rb");
 		if (!rbGetTweets.canExecute()) {
-			throw new RuntimeException("sentimentAnalayis.r did not return an executable.");
-		}
-
-		rSentimentAnalysis = executeGuestLanguageFile("sentimentAnalysis.r");
-		if (!rSentimentAnalysis.canExecute()) {
 			throw new RuntimeException("sentimentAnalayis.r did not return an executable.");
 		}
 	}
@@ -35,19 +29,14 @@ public final class TweetSentimentAnalyzer {
 	public Value plotSentimentOfTweets(String searchTerm, int tweetCount) {
 		try {
 			Value tweets = rbGetTweets.execute(searchTerm, tweetCount);
-			return rSentimentAnalysis.execute(tweets);
+			return tweets;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public Value plotSentimentOfTweets(Value json) {
-		if (!json.hasMember("searchTerm") || !json.hasMember("tweetCount")) {
-			throw new IllegalArgumentException("Json not good.");
-		}
-		String searchTerm = json.getMember("searchTerm").asString();
-		int tweetCount = json.getMember("tweetCount").asInt();
-		return plotSentimentOfTweets(searchTerm, tweetCount);
-	}
+    public static void main(String[] args) throws Exception {
+        System.out.println((new TweetSentimentAnalyzer()).plotSentimentOfTweets("@scgbern", 10));
+    }
 }

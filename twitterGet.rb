@@ -1,6 +1,7 @@
 require "twitter"
 
 def getTweets(searchTerm, tweetCount)
+  puts "RUBY START"
   begin
     data = Hash.new
     File.readlines(File.join(File.expand_path(File.dirname(__FILE__)), "twitterToken.txt")).each do |line|
@@ -17,11 +18,13 @@ def getTweets(searchTerm, tweetCount)
 
     twitterData = Array.new
 
+    puts "RUBY TWITTER CALL"
     if searchTerm[0] == "@"
       tweets = client.user_timeline(searchTerm, count: tweetCount)
     else
       tweets = client.search(searchTerm, lang: "en").take(tweetCount)
     end
+    puts "RUBY TWITTER END"
 
     tweets.each { |tweet| twitterData.push(tweet.full_text) }
     twitterData
