@@ -1,0 +1,26 @@
+os:
+    - linux
+
+env:
+    - GRAALVM_VERSION="1.0.0-rc9"
+
+install:
+    - |
+        if [[ "$TRAVIS_OS_NAME" == "osx" ]];   then DOWNLOAD_OS_NAME="macos"; fi
+        if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then DOWNLOAD_OS_NAME="linux"; fi
+        curl -LJ "https://github.com/oracle/graal/releases/download/vm-$GRAALVM_VERSION/graalvm-ce-$GRAALVM_VERSION-$DOWNLOAD_OS_NAME-amd64.tar.gz" --output gr
+        tar -xzf graalvm.tar.gz
+        export JAVA_HOME="$(pwd)/graalvm-ce-$GRAALVM_VERSION"
+        if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export JAVA_HOME="$JAVA_HOME/Contents/Home"; fi
+
+script:
+	- $JAVA_HOME/bin/gu install R
+	- $JAVA_HOME/jre/languages/R/bin/configure_fastr
+	- $JAVA_HOME/bin/R -f install_packages.R
+	- $JAVA_HOME/bin/gu install ruby
+	- $JAVA_HOME/jre/languages/ruby/lib/truffle/post_install_hook.sh
+	- $JAVA_HOME/bin/ruby -f install_packages.R
+	- $JAVA_HOME/bin/ruby -Sgem install twitter -v 5.17.0
+	- $JAVA_HOME/bin/npm install
+	- $JAVA_HOME/bin/javac *.java
+	# twitter token is missing...
