@@ -22,7 +22,6 @@ script:
     - $JAVA_HOME/bin/R -f install_packages.R
     - $JAVA_HOME/bin/gu install ruby
     - $JAVA_HOME/jre/languages/ruby/lib/truffle/post_install_hook.sh
-    - $JAVA_HOME/bin/ruby -f install_packages.R
     - $JAVA_HOME/bin/ruby -Sgem install twitter -v 5.17.0
     - $JAVA_HOME/bin/npm install
     - $JAVA_HOME/bin/javac *.java
